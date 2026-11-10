@@ -1,0 +1,47 @@
+name: API Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  api-tests:
+    name: Run API Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Start services via docker compose
+        run: |
+          docker compose up -d --build
+          echo "Waiting for services to be ready..."
+          sleep 120
+
+      - name: Install Postman test dependencies
+        working-directory: tests/postman
+        run: npm install
+
+      - name: Run Postman API tests
+        working-directory: tests/postman
+        run: npm run test:docker
+
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose logs --tail=200
+
+      - name: Stop services
+        if: always()
+        run: docker compose down -v
