@@ -5,7 +5,8 @@ global:
 
 # Image pull secrets
 imagePullSecrets:
-  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6
+  dockerconfigjson: eyJhdXRocyI6eyJnaGNyLmlvIjp7ImF1dGgiOiJaRzFwZEhKaGEyOTJjSFk2WjJod1h6YzNSRnB4U0ZJeFp6UnRRVWhIVGxOVFpWUnBZVnBOTTJaa09FcENiekYwTVd4UWFRPT0ifX19
+
 # Database configuration
 database:
   host: postgres
@@ -33,7 +34,7 @@ database:
 monolith:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/monolith
+    repository: ghcr.io/dmitrakovpv/projectrepo/monolith
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -53,7 +54,7 @@ monolith:
 proxyService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/proxy-service
+    repository: ghcr.io/dmitrakovpv/projectrepo/proxy-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -68,12 +69,18 @@ proxyService:
     port: 80
     targetPort: 8000
     type: ClusterIP
+  env:
+    GRADUAL_MIGRATION: "true"
+    MOVIES_MIGRATION_PERCENT: "100"
+    MONOLITH_URL: "http://monolith:8080"
+    MOVIES_SERVICE_URL: "http://movies-service:8081"
+    EVENTS_SERVICE_URL: "http://event-service:8082"
 
 # Movies service configuration
 moviesService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/movies-service
+    repository: ghcr.io/dmitrakovpv/projectrepo/movies-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -93,7 +100,7 @@ moviesService:
 eventsService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/events-service
+    repository: ghcr.io/dmitrakovpv/projectrepo/events-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -175,7 +182,7 @@ ingress:
           port: 80
         - path: /api/events
           pathType: Prefix
-          service: events-service
+          service: event-service
           port: 8082
 
 # Application configuration
