@@ -29,6 +29,9 @@ database:
     enabled: true
     size: 10Gi
     accessMode: ReadWriteOnce
+config:
+  gradualMigration: "true"
+  moviesMigrationPercent: "100"
 
 # Monolith configuration
 monolith:
@@ -115,6 +118,8 @@ eventsService:
     port: 8082
     targetPort: 8082
     type: ClusterIP
+  env:
+    KAFKA_BROKERS: "kafka:9092"
 
 # Kafka configuration
 kafka:

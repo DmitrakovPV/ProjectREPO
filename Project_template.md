@@ -365,6 +365,13 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
+1. Скриншот развертывания Helm 
+![Helm](image-6.png)
+2. Скриншот развертывания Helm 2
+![Helm2](image-7.png)
+3. Скришот ответа API 
+![API](image-8.png)
+
 ## Удаляем все
 
 ```bash
