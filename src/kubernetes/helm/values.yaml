@@ -184,9 +184,3 @@ ingress:
           pathType: Prefix
           service: event-service
           port: 8082
-
-# Application configuration
-config:
-  # Strangler Fig configuration
-  gradualMigration: "true"
-  moviesMigrationPercent: "100"
